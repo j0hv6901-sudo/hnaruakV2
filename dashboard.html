@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HNARUAK Admin</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="progress-bar"></div>
+
+<nav class="navbar">
+
+<div class="nav-container">
+
+<div class="logo">
+🔐 HNARUAK ADMIN
+</div>
+
+<div class="nav-links">
+
+<a href="index.html">Home</a>
+
+<a href="jobs.html">Jobs</a>
+
+<a href="ca.html">Current Affairs</a>
+
+</div>
+
+</div>
+
+</nav>
+
+<header class="header">
+
+<h1>Administrator Panel</h1>
+
+<p>Manage HNARUAK Content</p>
+
+</header>
+
+<div class="container">
+
+<div class="main-menu">
+
+<a href="/admin/" class="menu-card">
+
+<h2>📚 Netlify CMS</h2>
+
+<p>
+
+Upload syllabus, jobs and current affairs.
+
+</p>
+
+</a>
+
+<a href="jobs.html" class="menu-card">
+
+<h2>💼 View Jobs</h2>
+
+<p>
+
+Preview published job vacancies.
+
+</p>
+
+</a>
+
+<a href="ca.html" class="menu-card">
+
+<h2>📰 Current Affairs</h2>
+
+<p>
+
+Preview published current affairs.
+
+</p>
+
+</a>
+
+<a href="index.html" class="menu-card">
+
+<h2>🏠 Homepage</h2>
+
+<p>
+
+Return to the website.
+
+</p>
+
+</a>
+
+</div>
+
+<div class="announcement">
+
+⚠️ Only administrators should access the CMS dashboard.
+
+</div>
+
+</div>
+
+<footer class="footer">
+
+<h3>HNARUAK</h3>
+
+<p>Administrator Panel</p>
+
+<p>© 2026 HNARUAK</p>
+
+</footer>
+
+<button id="backToTop">↑</button>
+
+<script>
+
+const topBtn=document.getElementById("backToTop");
+
+window.addEventListener("scroll",()=>{
+
+topBtn.style.display=window.scrollY>300?"block":"none";
+
+});
+
+topBtn.onclick=()=>{
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+};
+
+window.addEventListener("scroll",()=>{
+
+const st=document.documentElement.scrollTop;
+
+const sh=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+
+document.querySelector(".progress-bar").style.width=(st/sh)*100+"%";
+
+});
+
+</script>
+
+</body>
+</html>
