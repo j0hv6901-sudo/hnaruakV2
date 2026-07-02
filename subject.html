@@ -1,37 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Subject | Hnaruak</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="header">
-    <h1 id="page-title">Subject</h1>
-    <a href="javascript:history.back()" class="back">← Back</a>
-  </div>
-  <div class="container" id="content">Loading...</div>
-<script>
-const urlParams = new URLSearchParams(window.location.search);
-const exam = urlParams.get('exam');
-const subject = urlParams.get('subject');
-document.getElementById('page-title').textContent = `${exam} - ${subject}`;
 
-async function loadContent() {
-  try {
-    const res = await fetch(`/.netlify/functions/get-content?type=syllabus&exam=${exam}&subject=${subject}`);
-    const data = await res.json();
-    let html = '';
-    if(data.pdf_file) html += `<a href="${data.pdf_file}" class="apply-btn" target="_blank">📄 Download PDF</a>`;
-    if(data.word_file) html += `<a href="${data.word_file}" class="apply-btn" target="_blank" style="background:#2b579a;">📝 Download Word</a>`;
-    if(data.image_file) html += `<br><img src="${data.image_file}" style="width:100%;max-width:700px;border-radius:8px;margin:20px 0;">`;
-    html += `<div class="post" style="margin-top:20px;">${data.body || '<p>Topic upload a la ni lo.</p>'}</div>`;
-    document.getElementById('content').innerHTML = html;
-  } catch(e) {
-    document.getElementById('content').innerHTML = '<div class="post">Topic upload a la ni lo.</div>';
-  }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Study Material | HNARUAK</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="progress-bar"></div>
+
+<nav class="navbar">
+
+<div class="nav-container">
+
+<div class="logo">📚 HNARUAK</div>
+
+<div class="nav-links">
+
+<a href="index.html">Home</a>
+<a href="jobs.html">Jobs</a>
+<a href="ca.html">Current Affairs</a>
+
+</div>
+
+</div>
+
+</nav>
+
+<header class="header">
+
+<h1 id="title">Loading...</h1>
+
+<p id="subtitle"></p>
+
+</header>
+
+<div class="container">
+
+<a href="javascript:history.back()" class="back">← Back</a>
+
+<div id="content" class="loading">
+
+Loading study material...
+
+</div>
+
+</div>
+
+<footer class="footer">
+
+<h3>HNARUAK</h3>
+
+<p>Learn • Prepare • Succeed</p>
+
+<p>© 2026 HNARUAK</p>
+
+</footer>
+
+<button id="backToTop">↑</button>
+
+<script>
+
+const params=new URLSearchParams(window.location.search);
+
+const exam=params.get("exam");
+
+const subject=params.get("subject");
+
+document.getElementById("subtitle").textContent=exam+" • "+subject;
+
+async function loadData(){
+
+try{
+
+const res=await fetch(`/.netlify/functions/get-content?type=syllabus&exam=${encodeURIComponent(exam)}&subject=${encodeURIComponent(subject)}`);
+
+const data=await res.json();
+
+document.getElementById("title").textContent=data.title||subject;
+
+let html="";
+
+if(data.image_file){
+
+html+=`
+
+<img src="${data.image_file}" alt="${subject}">
+
+`;
+
 }
-loadContent();
+
+html+=`
+
+<div class="post">
+
+<h2>${data.title||subject}</h2>
+
+`;
+
+if(data.body){
+
+html+=`
+
+<div>
+
+${data.body}
+
+</div>
+
+`;
+
+}
+
+html+=`
+
+<div class="button-group">
+
+`;
+
+if(data.pdf_file){
+
+html+=`
+
+<a class="apply-btn" target="_blank"
+
+href="${data.pdf_file}">
+
+📄 Download PDF
+
+</a>
+
+`;
+
+}
+
+if(data.word_file){
+
+html+=`
+
+<a class="download-btn"
+
+target="_blank"
+
+href="${data.word_file}">
+
+📝 Download Word
+
+</a>
+
+`;
+
+}
+
+html+=`
+
+<a class="share-btn"
+
+href="#"
+
+onclick="sharePage();return false;">
+
+📤 Share
+
+</a>
+
+<a class="print-btn"
+
+href="#"
+
+onclick="window.print();return false;">
+
+🖨 Print
+
+</a>
+
+</div>
+
+</div>
+
+`;
+
+document.getElementById("content").innerHTML=html;
+
+}catch{
+
+document.getElementById("content").innerHTML=`
+
+<div class="alert alert-danger">
+
+Study material not found.
+
+</div>
+
+`;
+
+}
+
+}
+
+loadData();
+
+function sharePage(){
+
+if(navigator.share){
+
+navigator.share({
+
+title:document.title,
+
+url:window.location.href
+
+});
+
+}else{
+
+navigator.clipboard.writeText(window.location.href);
+
+alert("Link copied.");
+
+}
+
+}
+
+const topBtn=document.getElementById("backToTop");
+
+window.addEventListener("scroll",()=>{
+
+topBtn.style.display=
+
+window.scrollY>300
+
+?
+
+"block"
+
+:
+
+"none";
+
+});
+
+topBtn.onclick=()=>{
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+};
+
+window.addEventListener("scroll",()=>{
+
+const st=document.documentElement.scrollTop;
+
+const sh=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+
+document.querySelector(".progress-bar").style.width=(st/sh)*100+"%";
+
+});
+
 </script>
+
 </body>
 </html>
