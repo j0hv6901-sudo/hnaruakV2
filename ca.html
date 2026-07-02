@@ -1,35 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Current Affairs | Hnaruak</title>
-  <link rel="stylesheet" href="style.css">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Current Affairs | HNARUAK</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
-  <div class="header"><h1>CURRENT AFFAIRS</h1><a href="index.html" class="back">← Home</a></div>
-  <div class="container">
-    <h2 class="section-title">Latest Updates</h2>
-    <div id="ca-list">Loading...</div>
-  </div>
+
+<div class="progress-bar"></div>
+
+<nav class="navbar">
+
+<div class="nav-container">
+
+<div class="logo">📚 HNARUAK</div>
+
+<div class="nav-links">
+
+<a href="index.html">Home</a>
+<a href="jobs.html">Jobs</a>
+
+</div>
+
+</div>
+
+</nav>
+
+<header class="header">
+
+<h1>Current Affairs</h1>
+
+<p>Daily & Monthly Updates</p>
+
+<div class="search-box">
+
+<input
+type="text"
+id="searchCA"
+placeholder="Search Current Affairs...">
+
+</div>
+
+</header>
+
+<div class="container">
+
+<a href="index.html" class="back">← Home</a>
+
+<h2 class="section-title">Categories</h2>
+
+<div class="filter-grid">
+
+<div class="filter-btn active" onclick="filterCA('All',this)">All</div>
+
+<div class="filter-btn" onclick="filterCA('National',this)">National</div>
+
+<div class="filter-btn" onclick="filterCA('International',this)">International</div>
+
+<div class="filter-btn" onclick="filterCA('Mizoram',this)">Mizoram</div>
+
+<div class="filter-btn" onclick="filterCA('Sports',this)">Sports</div>
+
+</div>
+
+<div id="ca-list" class="loading">
+
+Loading Current Affairs...
+
+</div>
+
+</div>
+
+<footer class="footer">
+
+<h3>HNARUAK</h3>
+
+<p>Learn • Prepare • Succeed</p>
+
+<p>© 2026 HNARUAK</p>
+
+</footer>
+
+<button id="backToTop">↑</button>
+
 <script>
-async function loadCA() {
-  try {
-    const res = await fetch('/.netlify/functions/get-content?type=ca');
-    const ca = await res.json();
-    let html = '';
-    ca.forEach(item => {
-      html += `<div class="post">
-        <h3>${item.title}</h3>
-        <p class="date">${item.date} | ${item.category}</p>
-        ${item.image_file? `<img src="${item.image_file}" style="width:100%;max-width:500px;border-radius:8px;margin:15px 0;">` : ''}
-        ${item.pdf_file? `<a href="${item.pdf_file}" class="apply-btn" target="_blank">📄 PDF</a>` : ''}
-        <div style="margin-top:15px;">${item.body}</div>
-      </div>`;
-    });
-    document.getElementById('ca-list').innerHTML = html || '<p>Update a awm rih lo.</p>';
-  } catch(e) { document.getElementById('ca-list').innerHTML = 'Error loading'; }
+
+let currentAffairs=[];
+
+async function loadCA(){
+
+try{
+
+const res=await fetch("/.netlify/functions/get-content?type=ca");
+
+currentAffairs=await res.json();
+
+displayCA(currentAffairs);
+
+}catch{
+
+document.getElementById("ca-list").innerHTML=
+
+"<div class='alert alert-danger'>Unable to load Current Affairs.</div>";
+
 }
+
+}
+
+function displayCA(list){
+
+let html="";
+
+list.forEach(item=>{
+
+html+=`
+
+<div class="ca-card">
+
+<div class="ca-content">
+
+<span class="badge badge-featured">
+
+${item.category||"General"}
+
+</span>
+
+<h3>${item.title}</h3>
+
+<p class="date">${item.date||""}</p>
+
+${item.image_file?
+
+`<img src="${item.image_file}" alt="${item.title}">`
+
+:""}
+
+${item.body?
+
+`<div>${item.body}</div>`
+
+:""}
+
+<div class="button-group">
+
+${item.pdf_file?
+
+`<a class="download-btn"
+
+target="_blank"
+
+href="${item.pdf_file}">
+
+📄 PDF
+
+</a>`
+
+:""}
+
+<a
+
+class="share-btn"
+
+href="#"
+
+onclick="shareArticle('${item.title}')">
+
+📤 Share
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+document.getElementById("ca-list").innerHTML=
+
+html||"<p>No Current Affairs available.</p>";
+
+}
+
+function filterCA(category,element){
+
+document.querySelectorAll(".filter-btn")
+
+.forEach(btn=>btn.classList.remove("active"));
+
+element.classList.add("active");
+
+if(category==="All"){
+
+displayCA(currentAffairs);
+
+return;
+
+}
+
+displayCA(
+
+currentAffairs.filter(
+
+item=>item.category===category
+
+)
+
+);
+
+}
+
+document.getElementById("searchCA")
+
+.addEventListener("keyup",function(){
+
+const value=this.value.toLowerCase();
+
+displayCA(
+
+currentAffairs.filter(item=>
+
+(item.title||"").toLowerCase().includes(value)
+
+)
+
+);
+
+});
+
+function shareArticle(title){
+
+if(navigator.share){
+
+navigator.share({
+
+title:title,
+
+url:window.location.href
+
+});
+
+}else{
+
+navigator.clipboard.writeText(window.location.href);
+
+alert("Link copied.");
+
+}
+
+}
+
+const topBtn=document.getElementById("backToTop");
+
+window.addEventListener("scroll",()=>{
+
+topBtn.style.display=
+
+window.scrollY>300
+
+?
+
+"block"
+
+:
+
+"none";
+
+});
+
+topBtn.onclick=()=>{
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+};
+
+window.addEventListener("scroll",()=>{
+
+const st=document.documentElement.scrollTop;
+
+const sh=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+
+document.querySelector(".progress-bar").style.width=(st/sh)*100+"%";
+
+});
+
 loadCA();
+
 </script>
+
 </body>
 </html>
