@@ -1,51 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Exam Syllabus | HNARUAK</title>
+<title>Exam Subjects | HNARUAK</title>
 
-    <meta name="description" content="Browse subjects and syllabus for competitive exams in Mizoram.">
-
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<header class="header">
+<div class="progress-bar"></div>
 
-    <h1 id="exam-title">Exam Syllabus</h1>
+<nav class="navbar">
+    <div class="nav-container">
 
-    <p>Select a subject</p>
+        <div class="logo">
+            📚 HNARUAK
+        </div>
 
-    <a href="index.html" class="back">← Back to Home</a>
-
-</header>
-
-<main class="container">
-
-    <h2 class="section-title" id="exam-name"></h2>
-
-    <div class="search-box">
-        <input
-            type="text"
-            id="subjectSearch"
-            placeholder="Search subject...">
-    </div>
-
-    <p id="subject-count" style="margin:15px 0;color:#aaa;"></p>
-
-    <div class="category-grid" id="subject-list">
-
-        <div class="loading">
-            Loading...
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="jobs.html">Jobs</a>
+            <a href="ca.html">Current Affairs</a>
         </div>
 
     </div>
+</nav>
 
-</main>
+<header class="header">
+
+<h1 id="exam-title">Exam</h1>
+
+<p>Select a Subject</p>
+
+</header>
+
+<div class="container">
+
+<a href="index.html" class="back">← Back to Home</a>
+
+<div class="search-box">
+
+<input
+type="text"
+id="subjectSearch"
+placeholder="Search Subject...">
+
+</div>
+
+<h2 class="section-title" id="exam-name"></h2>
+
+<div class="category-grid" id="subject-list">
+
+</div>
+
+</div>
+
+<footer class="footer">
+
+<h3>HNARUAK</h3>
+
+<p>Learn • Prepare • Succeed</p>
+
+<p>© 2026 HNARUAK</p>
+
+</footer>
 
 <script>
 
@@ -53,11 +74,9 @@ const urlParams = new URLSearchParams(window.location.search);
 
 const exam = urlParams.get("name");
 
-document.getElementById("exam-title").textContent =
-exam ? exam + " Syllabus" : "Exam Syllabus";
+document.getElementById("exam-title").textContent = exam + " Syllabus";
 
-document.getElementById("exam-name").textContent =
-exam ? exam + " Subjects" : "Subjects";
+document.getElementById("exam-name").textContent = exam + " Subjects";
 
 const subjects = {
 
@@ -147,41 +166,67 @@ Banking:[
 
 };
 
-const list=document.getElementById("subject-list");
+function loadSubjects(){
 
-if(!subjects[exam]){
+let html="";
 
-list.innerHTML=`
-<div class="post">
-<h3>Exam Not Found</h3>
-<p>The requested exam does not exist.</p>
-</div>
-`;
+(subjects[exam] || []).forEach(subject=>{
 
-}else{
+html += `
 
-render(subjects[exam]);
+<a href="subject.html?exam=${encodeURIComponent(exam)}&subject=${encodeURIComponent(subject)}"
 
-document.getElementById("subject-count").textContent=
-subjects[exam].length+" Subjects";
+class="cat-btn subject-item">
 
-}
-
-function render(items){
-
-list.innerHTML="";
-
-items.forEach(subject=>{
-
-list.innerHTML+=`
-<a href="subject.html?exam=${encodeURIComponent(exam)}&subject=${encodeURIComponent(subject)}" class="cat-btn">
 ${subject}
+
 </a>
+
 `;
 
 });
 
+document.getElementById("subject-list").innerHTML=html;
+
 }
 
-document.getElementById("subjectSearch")
-.addEventListener("
+loadSubjects();
+
+document.getElementById("subjectSearch").addEventListener("keyup",function(){
+
+const value=this.value.toLowerCase();
+
+document.querySelectorAll(".subject-item").forEach(item=>{
+
+item.style.display=item.textContent.toLowerCase().includes(value)
+
+?
+
+"block"
+
+:
+
+"none";
+
+});
+
+});
+
+/* Reading Progress */
+
+window.addEventListener("scroll",()=>{
+
+const scrollTop=document.documentElement.scrollTop;
+
+const scrollHeight=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+
+const progress=(scrollTop/scrollHeight)*100;
+
+document.querySelector(".progress-bar").style.width=progress+"%";
+
+});
+
+</script>
+
+</body>
+</html>
