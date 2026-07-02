@@ -1,55 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Latest Jobs | HNARUAK</title>
 
-<meta name="description" content="Latest Government and Private Job Notifications from HNARUAK.">
-
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
+<div class="progress-bar"></div>
+
+<nav class="navbar">
+
+<div class="nav-container">
+
+<div class="logo">📚 HNARUAK</div>
+
+<div class="nav-links">
+
+<a href="index.html">Home</a>
+<a href="ca.html">Current Affairs</a>
+
+</div>
+
+</div>
+
+</nav>
+
 <header class="header">
 
-<h1>💼 HNARUAK Jobs</h1>
+<h1>Latest Jobs</h1>
 
-<p>Latest Recruitment Updates</p>
+<p>Government & Competitive Examination Vacancies</p>
 
-<a href="index.html" class="back">← Home</a>
+<div class="search-box">
+
+<input
+type="text"
+id="searchJob"
+placeholder="Search Jobs...">
+
+</div>
 
 </header>
 
-<main class="container">
+<div class="container">
 
-<h2 class="section-title">Latest Jobs</h2>
+<a href="index.html" class="back">← Home</a>
 
-<div class="search-box">
-<input
-type="text"
-id="search"
-placeholder="Search jobs...">
-</div>
+<h2 class="section-title">Categories</h2>
 
-<div style="margin:20px 0;">
+<div class="filter-grid">
 
-<select id="category" class="apply-btn" style="background:#222;color:white;border:none;">
-
-<option value="All">All Categories</option>
-
-<option>MPSC</option>
-<option>Railways</option>
-<option>SSC</option>
-<option>RBI</option>
-<option>UPSC</option>
-<option>Army</option>
-<option>Banking</option>
-<option>Others</option>
-
-</select>
+<div class="filter-btn active" onclick="filterJob('All')">All</div>
+<div class="filter-btn" onclick="filterJob('MPSC')">MPSC</div>
+<div class="filter-btn" onclick="filterJob('SSC')">SSC</div>
+<div class="filter-btn" onclick="filterJob('UPSC')">UPSC</div>
+<div class="filter-btn" onclick="filterJob('Railways')">Railways</div>
+<div class="filter-btn" onclick="filterJob('Banking')">Banking</div>
+<div class="filter-btn" onclick="filterJob('Army')">Army</div>
 
 </div>
 
@@ -59,11 +73,23 @@ Loading Jobs...
 
 </div>
 
-</main>
+</div>
+
+<footer class="footer">
+
+<h3>HNARUAK</h3>
+
+<p>Learn • Prepare • Succeed</p>
+
+<p>© 2026 HNARUAK</p>
+
+</footer>
+
+<button id="backToTop">↑</button>
 
 <script>
 
-let allJobs=[];
+let jobs=[];
 
 async function loadJobs(){
 
@@ -71,93 +97,89 @@ try{
 
 const res=await fetch("/.netlify/functions/get-content?type=jobs");
 
-allJobs=await res.json();
+jobs=await res.json();
 
-render(allJobs);
+displayJobs(jobs);
 
-}catch(e){
+}catch{
 
 document.getElementById("job-list").innerHTML=
-"<div class='post'><h3>Error</h3><p>Unable to load jobs.</p></div>";
+"<div class='alert alert-danger'>Unable to load jobs.</div>";
 
 }
 
 }
 
-function render(list){
+function displayJobs(list){
 
-const container=document.getElementById("job-list");
-
-if(list.length===0){
-
-container.innerHTML=
-"<div class='post'><p>No jobs found.</p></div>";
-
-return;
-
-}
-
-container.innerHTML="";
+let html="";
 
 list.forEach(job=>{
 
-container.innerHTML+=`
+html+=`
 
-<div class="post">
+<div class="job-card">
 
-<h3>${job.title||""}</h3>
+<span class="badge badge-new">NEW</span>
 
-<p class="date">
+<h3>${job.title}</h3>
 
-📅 Last Date:
-${job.last_date||"Not Available"}
+<div class="post-meta">
 
-<br>
+<span>${job.category}</span>
 
-🏷 Category:
-${job.category||"Others"}
+<span>Last Date : ${job.last_date||"N/A"}</span>
+
+</div>
+
+<p>
+
+<strong>Post :</strong>
+
+${job.post||"-"}
 
 </p>
 
 <p>
 
-<strong>Post:</strong>
-${job.post||"-"}
+<strong>Vacancy :</strong>
 
-<br>
-
-<strong>Vacancy:</strong>
 ${job.vacancy||"-"}
 
 </p>
 
 ${job.image_file?
 
-`<img loading="lazy"
-src="${job.image_file}"
-alt="${job.title}">`
+`<img src="${job.image_file}">`
 
 :""}
 
-<div style="margin-top:15px;">
+<div class="button-group">
 
 ${job.pdf_file?
 
-`<a class="apply-btn"
-href="${job.pdf_file}"
-target="_blank">
-📄 PDF
+`<a class="download-btn"
+
+target="_blank"
+
+href="${job.pdf_file}">
+
+PDF
+
 </a>`
 
 :""}
 
 ${job.word_file?
 
-`<a class="apply-btn"
-style="background:#2b579a;"
-href="${job.word_file}"
-target="_blank">
-📝 Word
+`<a class="download-btn"
+
+target="_blank"
+
+href="${job.word_file}">
+
+WORD
+
 </a>`
 
 :""}
@@ -165,28 +187,37 @@ target="_blank">
 ${job.link?
 
 `<a class="apply-btn"
-style="background:#28a745;"
-href="${job.link}"
-target="_blank">
-🔗 Apply
+
+target="_blank"
+
+href="${job.link}">
+
+Apply
+
 </a>`
 
 :""}
 
-<button
-class="apply-btn"
-onclick="shareJob('${encodeURIComponent(job.title||'Job')}')">
+<a
 
-📤 Share
+class="share-btn"
 
-</button>
+href="#"
+
+onclick="share('${job.title}')">
+
+Share
+
+</a>
 
 </div>
 
 ${job.body?
 
-`<div style="margin-top:20px;border-top:1px solid #333;padding-top:15px;">
+`<div style="margin-top:20px">
+
 ${job.body}
+
 </div>`
 
 :""}
@@ -197,57 +228,109 @@ ${job.body}
 
 });
 
+document.getElementById("job-list").innerHTML=html||"<p>No jobs available.</p>";
+
 }
 
-document.getElementById("search").addEventListener("keyup",filter);
+function filterJob(category){
 
-document.getElementById("category").addEventListener("change",filter);
+document.querySelectorAll(".filter-btn").forEach(btn=>btn.classList.remove("active"));
 
-function filter(){
+event.target.classList.add("active");
 
-const text=document.getElementById("search").value.toLowerCase();
+if(category==="All"){
 
-const cat=document.getElementById("category").value;
+displayJobs(jobs);
 
-const filtered=allJobs.filter(job=>{
+return;
 
-const matchText=
-(job.title||"").toLowerCase().includes(text)||
-(job.post||"").toLowerCase().includes(text);
+}
 
-const matchCat=
-cat==="All"||
-job.category===cat;
+displayJobs(
 
-return matchText&&matchCat;
+jobs.filter(j=>j.category===category)
+
+);
+
+}
+
+document.getElementById("searchJob").addEventListener("keyup",function(){
+
+const value=this.value.toLowerCase();
+
+displayJobs(
+
+jobs.filter(job=>
+
+(job.title||"").toLowerCase().includes(value)
+
+)
+
+);
 
 });
 
-render(filtered);
-
-}
-
-function shareJob(title){
+function share(title){
 
 if(navigator.share){
 
 navigator.share({
 
-title:decodeURIComponent(title),
+title:title,
 
-url:location.href
+url:window.location.href
 
 });
 
 }else{
 
-navigator.clipboard.writeText(location.href);
+navigator.clipboard.writeText(window.location.href);
 
 alert("Link copied.");
 
 }
 
 }
+
+const topBtn=document.getElementById("backToTop");
+
+window.addEventListener("scroll",()=>{
+
+topBtn.style.display=
+
+window.scrollY>300
+
+?
+
+"block"
+
+:
+
+"none";
+
+});
+
+topBtn.onclick=()=>{
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+};
+
+window.addEventListener("scroll",()=>{
+
+const st=document.documentElement.scrollTop;
+
+const sh=document.documentElement.scrollHeight-document.documentElement.clientHeight;
+
+document.querySelector(".progress-bar").style.width=(st/sh)*100+"%";
+
+});
 
 loadJobs();
 
