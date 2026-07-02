@@ -1,1 +1,9 @@
-{"name":"hnaruak","version":"1.0.0","dependencies":{"gray-matter":"^4.0.3"}}
+{
+  "name": "hnaruak",
+  "version": "2.0.0",
+  "private": true,
+  "description": "HNARUAK - Mizoram Exam Portal",
+  "dependencies": {
+    "gray-matter": "^4.0.3"
+  }
+}
