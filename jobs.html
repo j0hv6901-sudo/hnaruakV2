@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Latest Jobs | HNARUAK</title>
+
+<meta name="description" content="Latest Government and Private Job Notifications from HNARUAK.">
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="header">
+
+<h1>💼 HNARUAK Jobs</h1>
+
+<p>Latest Recruitment Updates</p>
+
+<a href="index.html" class="back">← Home</a>
+
+</header>
+
+<main class="container">
+
+<h2 class="section-title">Latest Jobs</h2>
+
+<div class="search-box">
+<input
+type="text"
+id="search"
+placeholder="Search jobs...">
+</div>
+
+<div style="margin:20px 0;">
+
+<select id="category" class="apply-btn" style="background:#222;color:white;border:none;">
+
+<option value="All">All Categories</option>
+
+<option>MPSC</option>
+<option>Railways</option>
+<option>SSC</option>
+<option>RBI</option>
+<option>UPSC</option>
+<option>Army</option>
+<option>Banking</option>
+<option>Others</option>
+
+</select>
+
+</div>
+
+<div id="job-list" class="loading">
+
+Loading Jobs...
+
+</div>
+
+</main>
+
+<script>
+
+let allJobs=[];
+
+async function loadJobs(){
+
+try{
+
+const res=await fetch("/.netlify/functions/get-content?type=jobs");
+
+allJobs=await res.json();
+
+render(allJobs);
+
+}catch(e){
+
+document.getElementById("job-list").innerHTML=
+"<div class='post'><h3>Error</h3><p>Unable to load jobs.</p></div>";
+
+}
+
+}
+
+function render(list){
+
+const container=document.getElementById("job-list");
+
+if(list.length===0){
+
+container.innerHTML=
+"<div class='post'><p>No jobs found.</p></div>";
+
+return;
+
+}
+
+container.innerHTML="";
+
+list.forEach(job=>{
+
+container.innerHTML+=`
+
+<div class="post">
+
+<h3>${job.title||""}</h3>
+
+<p class="date">
+
+📅 Last Date:
+${job.last_date||"Not Available"}
+
+<br>
+
+🏷 Category:
+${job.category||"Others"}
+
+</p>
+
+<p>
+
+<strong>Post:</strong>
+${job.post||"-"}
+
+<br>
+
+<strong>Vacancy:</strong>
+${job.vacancy||"-"}
+
+</p>
+
+${job.image_file?
+
+`<img loading="lazy"
+src="${job.image_file}"
+alt="${job.title}">`
+
+:""}
+
+<div style="margin-top:15px;">
+
+${job.pdf_file?
+
+`<a class="apply-btn"
+href="${job.pdf_file}"
+target="_blank">
+📄 PDF
+</a>`
+
+:""}
+
+${job.word_file?
+
+`<a class="apply-btn"
+style="background:#2b579a;"
+href="${job.word_file}"
+target="_blank">
+📝 Word
+</a>`
+
+:""}
+
+${job.link?
+
+`<a class="apply-btn"
+style="background:#28a745;"
+href="${job.link}"
+target="_blank">
+🔗 Apply
+</a>`
+
+:""}
+
+<button
+class="apply-btn"
+onclick="shareJob('${encodeURIComponent(job.title||'Job')}')">
+
+📤 Share
+
+</button>
+
+</div>
+
+${job.body?
+
+`<div style="margin-top:20px;border-top:1px solid #333;padding-top:15px;">
+${job.body}
+</div>`
+
+:""}
+
+</div>
+
+`;
+
+});
+
+}
+
+document.getElementById("search").addEventListener("keyup",filter);
+
+document.getElementById("category").addEventListener("change",filter);
+
+function filter(){
+
+const text=document.getElementById("search").value.toLowerCase();
+
+const cat=document.getElementById("category").value;
+
+const filtered=allJobs.filter(job=>{
+
+const matchText=
+(job.title||"").toLowerCase().includes(text)||
+(job.post||"").toLowerCase().includes(text);
+
+const matchCat=
+cat==="All"||
+job.category===cat;
+
+return matchText&&matchCat;
+
+});
+
+render(filtered);
+
+}
+
+function shareJob(title){
+
+if(navigator.share){
+
+navigator.share({
+
+title:decodeURIComponent(title),
+
+url:location.href
+
+});
+
+}else{
+
+navigator.clipboard.writeText(location.href);
+
+alert("Link copied.");
+
+}
+
+}
+
+loadJobs();
+
+</script>
+
+</body>
+</html>

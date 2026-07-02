@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Exam Syllabus | HNARUAK</title>
+
+    <meta name="description" content="Browse subjects and syllabus for competitive exams in Mizoram.">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="header">
+
+    <h1 id="exam-title">Exam Syllabus</h1>
+
+    <p>Select a subject</p>
+
+    <a href="index.html" class="back">← Back to Home</a>
+
+</header>
+
+<main class="container">
+
+    <h2 class="section-title" id="exam-name"></h2>
+
+    <div class="search-box">
+        <input
+            type="text"
+            id="subjectSearch"
+            placeholder="Search subject...">
+    </div>
+
+    <p id="subject-count" style="margin:15px 0;color:#aaa;"></p>
+
+    <div class="category-grid" id="subject-list">
+
+        <div class="loading">
+            Loading...
+        </div>
+
+    </div>
+
+</main>
+
+<script>
+
+const urlParams = new URLSearchParams(window.location.search);
+
+const exam = urlParams.get("name");
+
+document.getElementById("exam-title").textContent =
+exam ? exam + " Syllabus" : "Exam Syllabus";
+
+document.getElementById("exam-name").textContent =
+exam ? exam + " Subjects" : "Subjects";
+
+const subjects = {
+
+MPSC:[
+"English",
+"Simple Arithmetics",
+"Reasoning",
+"Nursing Paper",
+"Computer GK",
+"Economics",
+"History",
+"Science",
+"Mizo",
+"Indian Polity",
+"Geography"
+],
+
+Railways:[
+"English",
+"Quantitative Aptitude",
+"General Intelligence & Reasoning",
+"Economics",
+"History",
+"Science",
+"Indian Polity",
+"Geography"
+],
+
+SSC:[
+"English",
+"Quantitative Aptitude",
+"General Intelligence & Reasoning",
+"Economics",
+"History",
+"Science",
+"Indian Polity",
+"Geography"
+],
+
+RBI:[
+"English",
+"Quantitative Aptitude",
+"General Intelligence & Reasoning",
+"General Awareness",
+"Economics",
+"History",
+"Science",
+"Indian Polity",
+"Geography"
+],
+
+UPSC:[
+"English",
+"Quantitative Aptitude",
+"General Intelligence & Reasoning",
+"General Studies",
+"Economics",
+"History",
+"Science",
+"Indian Polity",
+"Geography"
+],
+
+Army:[
+"English",
+"Quantitative Aptitude",
+"General Intelligence & Reasoning",
+"General Studies",
+"Economics",
+"History",
+"Science",
+"Indian Polity",
+"Geography"
+],
+
+Banking:[
+"English",
+"Quantitative Aptitude",
+"General Intelligence & Reasoning",
+"General Awareness",
+"Economics",
+"History",
+"Science",
+"Indian Polity",
+"Geography"
+]
+
+};
+
+const list=document.getElementById("subject-list");
+
+if(!subjects[exam]){
+
+list.innerHTML=`
+<div class="post">
+<h3>Exam Not Found</h3>
+<p>The requested exam does not exist.</p>
+</div>
+`;
+
+}else{
+
+render(subjects[exam]);
+
+document.getElementById("subject-count").textContent=
+subjects[exam].length+" Subjects";
+
+}
+
+function render(items){
+
+list.innerHTML="";
+
+items.forEach(subject=>{
+
+list.innerHTML+=`
+<a href="subject.html?exam=${encodeURIComponent(exam)}&subject=${encodeURIComponent(subject)}" class="cat-btn">
+${subject}
+</a>
+`;
+
+});
+
+}
+
+document.getElementById("subjectSearch")
+.addEventListener("

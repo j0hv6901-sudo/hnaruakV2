@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>HNARUAK | Mizoram Exam Portal</title>
+
+  <meta name="description" content="HNARUAK - Mizoram Competitive Exam Portal. Syllabus, Jobs, Current Affairs, Study Materials and Updates.">
+
+  <meta name="theme-color" content="#d4af37">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="header">
+    <h1>HNARUAK</h1>
+    <p>Mizoram Competitive Exam Portal</p>
+
+    <div class="search-box">
+        <input
+            type="text"
+            id="homeSearch"
+            placeholder="Search exams..."
+            aria-label="Search exams">
+    </div>
+</header>
+
+<main class="container">
+
+<section>
+
+<h2 class="section-title">
+📚 Exam Syllabus
+</h2>
+
+<div class="category-grid">
+
+<a href="exam.html?name=MPSC" class="cat-btn">MPSC</a>
+
+<a href="exam.html?name=Railways" class="cat-btn">Railways</a>
+
+<a href="exam.html?name=SSC" class="cat-btn">SSC</a>
+
+<a href="exam.html?name=RBI" class="cat-btn">RBI</a>
+
+<a href="exam.html?name=UPSC" class="cat-btn">UPSC</a>
+
+<a href="exam.html?name=Army" class="cat-btn">Army</a>
+
+<a href="exam.html?name=Banking" class="cat-btn">Banking</a>
+
+</div>
+
+</section>
+
+
+<section class="main-menu">
+
+<a href="jobs.html" class="menu-card">
+<h2>💼 Job Vacancy</h2>
+<p>Latest Government & Private Jobs</p>
+</a>
+
+<a href="ca.html" class="menu-card">
+<h2>📰 Current Affairs</h2>
+<p>Daily & Monthly Updates</p>
+</a>
+
+</section>
+
+
+<section>
+
+<h2 class="section-title">
+🔥 Latest Updates
+</h2>
+
+<div class="post">
+
+<p>
+Latest Jobs and Current Affairs will appear here automatically in the next update.
+</p>
+
+</div>
+
+</section>
+
+</main>
+
+<footer class="footer">
+
+<p>
+© 2026 HNARUAK • All Rights Reserved
+</p>
+
+</footer>
+
+<script>
+
+const search=document.getElementById("homeSearch");
+
+search.addEventListener("keyup",function(){
+
+const value=this.value.toLowerCase();
+
+document.querySelectorAll(".cat-btn").forEach(btn=>{
+
+btn.style.display=
+btn.textContent.toLowerCase().includes(value)
+?"block":"none";
+
+});
+
+});
+
+</script>
+
+</body>
+</html>
