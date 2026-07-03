@@ -1,199 +1,90 @@
-// ===============================
-// HNARUAK Authentication
-// ===============================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-// Supabase Configuration
-const SUPABASE_URL = "https://zczpacrouktnwpbapbon.supabase.co";
-const SUPABASE_KEY = "sb_publishable_mjYJ2AcAaoTIdzaIDHxTvQ_NgOHy4C6";
+<title>HNARUAK | Student Signup</title>
 
-// Create Supabase Client
-const supabase = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="auth.css">
+</head>
 
-// ===============================
-// SIGN UP
-// ===============================
-async function signUp(event) {
+<body>
 
-    event.preventDefault();
+<nav class="navbar">
+<div class="nav-container">
 
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+<div class="logo">
+📚 HNARUAK
+</div>
 
-    if (!name || !email || !password) {
-        alert("Please fill in all fields.");
-        return;
-    }
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="login.html">Login</a>
+</div>
 
-    try {
+</div>
+</nav>
 
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: {
-                    full_name: name
-                }
-            }
-        });
+<div class="auth-container">
 
-        if (error) {
-            alert(error.message);
-            console.error(error);
-            return;
-        }
+<div class="auth-card">
 
-        console.log(data);
+<h1>Create Student Account</h1>
 
-        alert("Account created successfully!\n\nPlease check your email to verify your account.");
+<p>Join HNARUAK and start preparing for competitive exams.</p>
 
-        window.location.href = "login.html";
+<form onsubmit="signUp(event)">
 
-    } catch (err) {
+<input
+type="text"
+id="name"
+placeholder="Full Name"
+required>
 
-        console.error(err);
+<input
+type="email"
+id="email"
+placeholder="Email Address"
+required>
 
-        alert("Unexpected error:\n" + err.message);
+<input
+type="password"
+id="password"
+placeholder="Password"
+minlength="6"
+required>
 
-    }
+<button type="submit">
+Create Account
+</button>
 
-}
+</form>
 
-// ===============================
-// LOGIN
-// ===============================
-async function login(event) {
+<p class="auth-link">
+Already have an account?
+<a href="login.html">
+Login Here
+</a>
+</p>
 
-    event.preventDefault();
+</div>
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+</div>
 
-    try {
+<footer class="footer">
 
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password
-        });
+<h3>HNARUAK</h3>
 
-        if (error) {
-            alert(error.message);
-            return;
-        }
+<p>Learn • Prepare • Succeed</p>
 
-        if (data.user.email === "hnaruakinpui@gmail.com") {
+<p>© 2026 HNARUAK. All Rights Reserved.</p>
 
-            window.location.href = "admin-dashboard.html";
+</footer>
 
-        } else {
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
 
-            window.location.href = "dashboard.html";
-
-        }
-
-    } catch (err) {
-
-        alert(err.message);
-
-    }
-
-}
-
-// ===============================
-// CHECK STUDENT
-// ===============================
-async function checkUser() {
-
-    const { data } = await supabase.auth.getUser();
-
-    if (!data.user) {
-
-        window.location.href = "login.html";
-        return;
-
-    }
-
-    const studentName = document.getElementById("studentName");
-
-    if (studentName) {
-
-        studentName.textContent =
-            data.user.user_metadata.full_name ||
-            data.user.email;
-
-    }
-
-}
-
-// ===============================
-// CHECK ADMIN
-// ===============================
-async function checkAdmin() {
-
-    const { data } = await supabase.auth.getUser();
-
-    if (!data.user) {
-
-        window.location.href = "login.html";
-        return;
-
-    }
-
-    if (data.user.email !== "hnaruakinpui@gmail.com") {
-
-        alert("Access denied.");
-
-        window.location.href = "dashboard.html";
-
-        return;
-
-    }
-
-    const studentName = document.getElementById("studentName");
-
-    if (studentName) {
-
-        studentName.textContent = "Administrator";
-
-    }
-
-}
-
-// ===============================
-// LOGOUT
-// ===============================
-async function logout() {
-
-    await supabase.auth.signOut();
-
-    window.location.href = "index.html";
-
-}
-
-// ===============================
-// PASSWORD RESET
-// ===============================
-async function resetPassword() {
-
-    const email = prompt("Enter your registered email:");
-
-    if (!email) return;
-
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + "/login.html"
-    });
-
-    if (error) {
-
-        alert(error.message);
-
-    } else {
-
-        alert("Password reset email sent. Check your inbox.");
-
-    }
-
-}
+</body>
+</html>
