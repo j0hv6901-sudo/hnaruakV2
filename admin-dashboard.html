@@ -5,13 +5,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>HNARUAK Admin</title>
+<title>HNARUAK Admin Dashboard</title>
 
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="auth.css">
 
 </head>
 
-<body>
+<body onload="checkAdmin()">
 
 <div class="progress-bar"></div>
 
@@ -26,10 +27,9 @@
 <div class="nav-links">
 
 <a href="index.html">Home</a>
-
 <a href="jobs.html">Jobs</a>
-
 <a href="ca.html">Current Affairs</a>
+<a href="#" onclick="logout()">Logout</a>
 
 </div>
 
@@ -39,13 +39,19 @@
 
 <header class="header">
 
-<h1>Administrator Panel</h1>
+<h1>Administrator Dashboard</h1>
 
-<p>Manage HNARUAK Content</p>
+<p>Welcome, <span id="studentName">Admin</span></p>
 
 </header>
 
 <div class="container">
+
+<div class="announcement">
+
+✅ Logged in as Administrator
+
+</div>
 
 <div class="main-menu">
 
@@ -54,9 +60,7 @@
 <h2>📚 Netlify CMS</h2>
 
 <p>
-
-Upload syllabus, jobs and current affairs.
-
+Manage Jobs, Current Affairs, Resources and Premium Content.
 </p>
 
 </a>
@@ -66,9 +70,7 @@ Upload syllabus, jobs and current affairs.
 <h2>💼 View Jobs</h2>
 
 <p>
-
 Preview published job vacancies.
-
 </p>
 
 </a>
@@ -78,9 +80,17 @@ Preview published job vacancies.
 <h2>📰 Current Affairs</h2>
 
 <p>
-
 Preview published current affairs.
+</p>
 
+</a>
+
+<a href="dashboard.html" class="menu-card">
+
+<h2>👨‍🎓 Student Dashboard</h2>
+
+<p>
+Open the student dashboard.
 </p>
 
 </a>
@@ -90,9 +100,7 @@ Preview published current affairs.
 <h2>🏠 Homepage</h2>
 
 <p>
-
 Return to the website.
-
 </p>
 
 </a>
@@ -101,7 +109,7 @@ Return to the website.
 
 <div class="announcement">
 
-⚠️ Only administrators should access the CMS dashboard.
+⚠️ Only <strong>hnaruakinpui@gmail.com</strong> can access this page.
 
 </div>
 
@@ -150,6 +158,44 @@ const sh=document.documentElement.scrollHeight-document.documentElement.clientHe
 document.querySelector(".progress-bar").style.width=(st/sh)*100+"%";
 
 });
+
+</script>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="auth.js"></script>
+
+<script>
+
+async function checkAdmin(){
+
+const { data, error } = await supabase.auth.getUser();
+
+if(error || !data.user){
+
+alert("Please login first.");
+
+window.location.href="login.html";
+
+return;
+
+}
+
+if(data.user.email!=="hnaruakinpui@gmail.com"){
+
+alert("Access denied. Administrator only.");
+
+window.location.href="dashboard.html";
+
+return;
+
+}
+
+document.getElementById("studentName").textContent=
+data.user.user_metadata.full_name || "Administrator";
+
+}
 
 </script>
 
