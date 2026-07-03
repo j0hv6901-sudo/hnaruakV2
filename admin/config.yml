@@ -7,8 +7,8 @@ publish_mode: editorial_workflow
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
-site_url: "https://YOUR-SITE.netlify.app"
-display_url: "https://YOUR-SITE.netlify.app"
+site_url: "https://hnaruakv2.netlify.app"
+display_url: "https://hnaruakv2.netlify.app"
 
 collections:
 
